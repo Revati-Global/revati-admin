@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #F2F1F5;
+  color: #35313B;
+  min-height: 100vh;
+  font-family: Inter, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: Manrope, sans-serif;
+}
+
+::selection {
+  background-color: #645394;
+  color: #ffffff;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F2F1F5;
+}
+::-webkit-scrollbar-thumb {
+  background: #D9DDE3;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #645394;
+}
+
+/* Light Card & Panel Utilities */
+.white-card {
+  background: #FFFFFF;
+  border: 1px solid #D9DDE3;
+  box-shadow: 0 2px 8px rgba(100, 83, 148, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+/* Input Focus Ring */
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: #645394 !important;
+  box-shadow: 0 0 0 3px rgba(100, 83, 148, 0.12) !important;
+}
