@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../api/client';
+import { directUploadFile } from '../api/uploadHelper';
 import {
   FolderTree,
   Plus,
@@ -144,36 +145,38 @@ export function CategoriesPage() {
 
     try {
       setSubmitting(true);
-      const data = new FormData();
-      data.append('title', formData.title);
-      if (formData.slug) data.append('slug', formData.slug);
-      data.append('parent_category', formData.parent_category);
-      data.append('description', formData.description || '');
-      data.append('order', formData.order);
-      data.append('status', formData.status);
-      data.append('navigation_status', formData.navigation_status);
-      data.append('home_status', formData.home_status);
-      data.append('seo_title', formData.seo_title || '');
-      data.append('seo_keyword', formData.seo_keyword || '');
-      data.append('seo_description', formData.seo_description || '');
+      let imagePath = currentCategory?.image || '';
 
       if (selectedFile) {
-        data.append('image', selectedFile);
+        const uploadResult = await directUploadFile(selectedFile, 'thumbnail');
+        imagePath = uploadResult.path;
       }
 
+      const payload = {
+        title: formData.title,
+        slug: formData.slug || undefined,
+        parent_id: formData.parent_category || null,
+        parent_category: formData.parent_category || null,
+        description: formData.description || '',
+        order: Number(formData.order) || 0,
+        status: Number(formData.status),
+        navigation_status: Number(formData.navigation_status),
+        home_status: Number(formData.home_status),
+        seo_title: formData.seo_title || '',
+        seo_keyword: formData.seo_keyword || '',
+        seo_description: formData.seo_description || '',
+        image: imagePath
+      };
+
       if (modalMode === 'create') {
-        const res = await api.post('/admin/categories', data, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
+        const res = await api.post('/admin/categories', payload);
         if (res.data.result === 'success') {
           showToast('success', 'Category created successfully');
           setIsModalOpen(false);
           fetchCategories();
         }
       } else {
-        const res = await api.put(`/admin/categories/${currentCategory.id}`, data, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
+        const res = await api.put(`/admin/categories/${currentCategory.id}`, payload);
         if (res.data.result === 'success') {
           showToast('success', 'Category updated successfully');
           setIsModalOpen(false);
@@ -181,7 +184,7 @@ export function CategoriesPage() {
         }
       }
     } catch (err) {
-      showToast('error', err.response?.data?.message || 'Operation failed');
+      showToast('error', err.response?.data?.message || err.message || 'Operation failed');
     } finally {
       setSubmitting(false);
     }

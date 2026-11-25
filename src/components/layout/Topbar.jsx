@@ -13,19 +13,26 @@ const routeTitles = {
   '/categories': 'Product Categories',
   '/products': 'Heating & HVAC Systems',
   '/blogs': 'Articles & Technical Blogs',
-  '/services': 'Services & Capabilities',
-  '/industries': 'Industry Sectors',
+  '/solutions': 'Engineering Solutions',
+  '/services': 'Engineering Solutions',
+  '/applications': 'Industry Applications',
+  '/industries': 'Industry Applications',
+  '/projects': 'Projects & References',
+  '/downloads': 'Brochures & Technical Datasheets',
   '/banners': 'Hero Banners & Visual Media',
   '/features': 'Core Enterprise Features',
   '/pages': 'Static Pages & Corporate Content',
   '/faqs': 'Frequently Asked Questions',
-  '/inquiries': 'Customer Inquiries & Leads',
+  '/enquiries': 'Customer Enquiries & RFQs',
+  '/inquiries': 'Customer Enquiries & RFQs',
   '/subscribers': 'Newsletter Subscribers',
-  '/cleanup': 'Data Cleanup & Test Record Manager',
+  '/users': 'Users & Role Management',
+  '/settings': 'Company & Site Settings',
+  '/cleanup': 'Data Cleanup & Storage Maintenance',
 };
 
 export function Topbar({ setMobileOpen }) {
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const location = useLocation();
   const currentTitle = routeTitles[location.pathname] || 'Management Portal';
 
@@ -63,17 +70,17 @@ export function Topbar({ setMobileOpen }) {
           <ExternalLink className="w-3 h-3 text-[#645394]" />
         </a>
 
-        {/* User Info Capsule: Revati Global Admin */}
+        {/* Dynamic User Capsule */}
         <div className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#F2F1F5] border border-[#D9DDE3] text-xs">
           <div className="w-6 h-6 rounded-lg bg-[#645394] flex items-center justify-center text-white font-bold text-[10px] shadow-sm font-mono">
-            R
+            {user?.name ? user.name[0].toUpperCase() : 'R'}
           </div>
           <div className="flex flex-col">
-            <span className="font-bold text-[#35313B] leading-tight">
-              Revati Global Admin
+            <span className="font-bold text-[#35313B] leading-tight max-w-[120px] truncate">
+              {user?.name || 'Administrator'}
             </span>
             <span className="text-[10px] text-[#645394] font-semibold uppercase font-mono">
-              Super Admin
+              {user?.role || 'Admin'}
             </span>
           </div>
         </div>

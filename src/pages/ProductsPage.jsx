@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../api/client';
+import { directUploadFile } from '../api/uploadHelper';
 import {
   Package,
   Plus,
@@ -50,6 +51,8 @@ export function ProductsPage() {
     description: '',
     feature_and_benefit: '',
     benefit_description: '',
+    capacity: '',
+    power: '',
     order: 0,
     status: 1,
     seo_title: '',
@@ -138,6 +141,8 @@ export function ProductsPage() {
       description: '',
       feature_and_benefit: '',
       benefit_description: '',
+      capacity: '',
+      power: '',
       order: products.length + 1,
       status: 1,
       seo_title: '',
@@ -165,6 +170,8 @@ export function ProductsPage() {
       description: p.description || '',
       feature_and_benefit: p.feature_and_benefit || '',
       benefit_description: p.benefit_description || '',
+      capacity: p.capacity || '',
+      power: p.power || '',
       order: p.order ?? 0,
       status: p.status ?? 1,
       seo_title: p.seo_title || '',
@@ -214,40 +221,57 @@ export function ProductsPage() {
 
     try {
       setSubmitting(true);
-      const data = new FormData();
-      data.append('title', formData.title.trim());
-      if (formData.slug) data.append('slug', formData.slug.trim());
-      if (formData.category_id) data.append('category_id', formData.category_id);
-      data.append('description', formData.description || '');
-      data.append('feature_and_benefit', formData.feature_and_benefit || '');
-      data.append('benefit_description', formData.benefit_description || '');
-      data.append('order', formData.order);
-      data.append('status', formData.status);
-      data.append('seo_title', formData.seo_title || '');
-      data.append('seo_description', formData.seo_description || '');
-      data.append('seo_keywords', formData.seo_keywords || '');
 
-      // Clean additionals
+      let imagePath = currentProduct?.image || '';
+      let benefitImagePath = currentProduct?.benefit_image || '';
+      let cataloguePath = currentProduct?.catalogue || '';
+
+      if (mainImageFile) {
+        const uploadResult = await directUploadFile(mainImageFile, 'product');
+        imagePath = uploadResult.path;
+      }
+      if (benefitImageFile) {
+        const uploadResult = await directUploadFile(benefitImageFile, 'product');
+        benefitImagePath = uploadResult.path;
+      }
+      if (catalogueFile) {
+        const uploadResult = await directUploadFile(catalogueFile, 'pdf');
+        cataloguePath = uploadResult.path;
+      }
+
       const cleanAdditionals = additionalsList.filter(a => a.title?.trim() || a.description?.trim() || a.image?.trim());
-      data.append('additionals', JSON.stringify(cleanAdditionals));
 
-      if (mainImageFile) data.append('image', mainImageFile);
-      if (benefitImageFile) data.append('benefit_image', benefitImageFile);
-      if (catalogueFile) data.append('catalogue', catalogueFile);
+      const payload = {
+        title: formData.title.trim(),
+        slug: formData.slug?.trim() || undefined,
+        category_id: formData.category_id || null,
+        description: formData.description || '',
+        feature_and_benefit: formData.feature_and_benefit || '',
+        benefit_description: formData.benefit_description || '',
+        capacity: formData.capacity || '',
+        power: formData.power || '',
+        order: Number(formData.order) || 0,
+        status: Number(formData.status),
+        seo_title: formData.seo_title || '',
+        seo_description: formData.seo_description || '',
+        seo_keywords: formData.seo_keywords || '',
+        seo_keyword: formData.seo_keywords || '',
+        image: imagePath,
+        benefit_image: benefitImagePath,
+        catalogue: cataloguePath,
+        additionals: cleanAdditionals,
+        specifications: cleanAdditionals
+      };
 
       if (modalMode === 'create') {
-        const res = await api.post('/admin/products', data, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
+        const res = await api.post('/admin/products', payload);
         if (res.data.result === 'success') {
           showToast('success', 'Product created successfully');
           setIsModalOpen(false);
           fetchProducts();
         }
       } else {
-        const res = await api.put(`/admin/products/${currentProduct.id}`, data, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
+        const res = await api.put(`/admin/products/${currentProduct.id}`, payload);
         if (res.data.result === 'success') {
           showToast('success', 'Product updated successfully');
           setIsModalOpen(false);
@@ -255,7 +279,7 @@ export function ProductsPage() {
         }
       }
     } catch (err) {
-      showToast('error', err.response?.data?.message || 'Operation failed');
+      showToast('error', err.response?.data?.message || err.message || 'Operation failed');
     } finally {
       setSubmitting(false);
     }
@@ -644,6 +668,34 @@ export function ProductsPage() {
                         type="number"
                         value={formData.order}
                         onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
+                        className="w-full px-3.5 py-2.5 bg-white border border-[#D9DDE3] rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#645394]/20 focus:border-[#645394]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-[#645394] mb-1.5">
+                        Capacity Rating (e.g. 100 kW - 5 MW)
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.capacity}
+                        onChange={(e) => setFormData({ ...formData, capacity: e.target.value })}
+                        placeholder="e.g. 500 TR / 1200 kW"
+                        className="w-full px-3.5 py-2.5 bg-white border border-[#D9DDE3] rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#645394]/20 focus:border-[#645394]"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-[#645394] mb-1.5">
+                        Power / Supply Spec
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.power}
+                        onChange={(e) => setFormData({ ...formData, power: e.target.value })}
+                        placeholder="e.g. 415V, 3-Phase, 50Hz"
                         className="w-full px-3.5 py-2.5 bg-white border border-[#D9DDE3] rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#645394]/20 focus:border-[#645394]"
                       />
                     </div>

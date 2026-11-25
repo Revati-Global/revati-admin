@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 import { AdminLayout } from './components/layout/AdminLayout';
 import { LoginPage } from './pages/LoginPage';
@@ -8,15 +8,27 @@ import { DashboardPage } from './pages/DashboardPage';
 import { CategoriesPage } from './pages/CategoriesPage';
 import { ProductsPage } from './pages/ProductsPage';
 import { BlogsPage } from './pages/BlogsPage';
-import { ServicesPage } from './pages/ServicesPage';
-import { IndustriesPage } from './pages/IndustriesPage';
+import { SolutionsPage } from './pages/SolutionsPage';
+import { ApplicationsPage } from './pages/ApplicationsPage';
+import { ProjectsPage } from './pages/ProjectsPage';
+import { DownloadsPage } from './pages/DownloadsPage';
 import { BannersPage } from './pages/BannersPage';
 import { FeaturesPage } from './pages/FeaturesPage';
 import { StaticPagesPage } from './pages/StaticPagesPage';
 import { FaqsPage } from './pages/FaqsPage';
-import { InquiriesPage } from './pages/InquiriesPage';
+import { EnquiriesPage } from './pages/EnquiriesPage';
 import { SubscribersPage } from './pages/SubscribersPage';
+import { UsersPage } from './pages/UsersPage';
+import { SettingsPage } from './pages/SettingsPage';
 import { DataCleanupPage } from './pages/DataCleanupPage';
+
+function SuperAdminOnlyRoute({ children }) {
+  const { user } = useAuth();
+  if (user?.role !== 'super admin') {
+    return <Navigate to="/" replace />;
+  }
+  return children;
+}
 
 export function App() {
   return (
@@ -39,14 +51,36 @@ export function App() {
             <Route path="categories" element={<CategoriesPage />} />
             <Route path="products" element={<ProductsPage />} />
             <Route path="blogs" element={<BlogsPage />} />
-            <Route path="services" element={<ServicesPage />} />
-            <Route path="industries" element={<IndustriesPage />} />
+
+            {/* Primary Modern Routes */}
+            <Route path="solutions" element={<SolutionsPage />} />
+            <Route path="applications" element={<ApplicationsPage />} />
+            <Route path="projects" element={<ProjectsPage />} />
+            <Route path="downloads" element={<DownloadsPage />} />
+
+            {/* Legacy URL Aliases Redirects */}
+            <Route path="services" element={<Navigate to="/solutions" replace />} />
+            <Route path="industries" element={<Navigate to="/applications" replace />} />
+            <Route path="references" element={<Navigate to="/projects" replace />} />
+            <Route path="inquiries" element={<Navigate to="/enquiries" replace />} />
+
             <Route path="banners" element={<BannersPage />} />
             <Route path="features" element={<FeaturesPage />} />
             <Route path="pages" element={<StaticPagesPage />} />
             <Route path="faqs" element={<FaqsPage />} />
-            <Route path="inquiries" element={<InquiriesPage />} />
+            <Route path="enquiries" element={<EnquiriesPage />} />
             <Route path="subscribers" element={<SubscribersPage />} />
+
+            {/* Administration */}
+            <Route
+              path="users"
+              element={
+                <SuperAdminOnlyRoute>
+                  <UsersPage />
+                </SuperAdminOnlyRoute>
+              }
+            />
+            <Route path="settings" element={<SettingsPage />} />
             <Route path="cleanup" element={<DataCleanupPage />} />
           </Route>
 
