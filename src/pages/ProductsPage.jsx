@@ -324,11 +324,10 @@ export function ProductsPage() {
       {/* Toast Notification */}
       {toast && (
         <div
-          className={`fixed bottom-6 right-6 z-50 px-4 py-3 rounded-xl border shadow-2xl flex items-center gap-3 text-sm font-medium transition-all ${
-            toast.type === 'success'
-              ? 'bg-emerald-950/90 border-emerald-500/30 text-emerald-300'
-              : 'bg-rose-950/90 border-rose-500/30 text-rose-300'
-          }`}
+          className={`fixed bottom-6 right-6 z-50 px-4 py-3 rounded-xl border shadow-2xl flex items-center gap-3 text-sm font-medium transition-all ${toast.type === 'success'
+            ? 'bg-emerald-950/90 border-emerald-500/30 text-emerald-300'
+            : 'bg-rose-950/90 border-rose-500/30 text-rose-300'
+            }`}
         >
           {toast.type === 'success' ? (
             <CheckCircle2 className="w-5 h-5 text-emerald-400" />
@@ -516,16 +515,14 @@ export function ProductsPage() {
                     <td className="px-4 py-4 text-center">
                       <button
                         onClick={() => handleToggleStatus(p)}
-                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all ${
-                          p.status === 1
-                            ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20'
-                            : 'bg-surface-base text-slate-400 border border-[#D9DDE3] hover:bg-slate-700 hover:text-slate-700'
-                        }`}
+                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all ${p.status === 1
+                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20'
+                          : 'bg-surface-base text-slate-400 border border-[#D9DDE3] hover:bg-slate-700 hover:text-slate-700'
+                          }`}
                       >
                         <span
-                          className={`w-1.5 h-1.5 rounded-full ${
-                            p.status === 1 ? 'bg-emerald-400 animate-pulse' : 'bg-slate-500'
-                          }`}
+                          className={`w-1.5 h-1.5 rounded-full ${p.status === 1 ? 'bg-emerald-400 animate-pulse' : 'bg-slate-500'
+                            }`}
                         />
                         <span>{p.status === 1 ? 'Active' : 'Inactive'}</span>
                       </button>
@@ -596,11 +593,10 @@ export function ProductsPage() {
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveTab(tab.id)}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                    activeTab === tab.id
-                      ? 'bg-[#645394] text-white shadow-md shadow-brand-600/30'
-                      : 'text-slate-600 hover:text-slate-800 hover:bg-brand-50/40/60'
-                  }`}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === tab.id
+                    ? 'bg-[#645394] text-white shadow-md shadow-brand-600/30'
+                    : 'text-slate-600 hover:text-slate-800 hover:bg-brand-50/40/60'
+                    }`}
                 >
                   {tab.label}
                 </button>
@@ -1028,7 +1024,7 @@ export function ProductsPage() {
               {/* Modal Actions */}
               <div className="flex items-center justify-between pt-4 border-t border-[#D9DDE3] shrink-0">
                 <div className="flex items-center gap-2 text-xs text-slate-400 font-mono">
-                  
+
                 </div>
                 <div className="flex items-center gap-3">
                   <button
