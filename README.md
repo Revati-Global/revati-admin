@@ -1,45 +1,24 @@
-# Revati Global - Admin Dashboard (`revati-admin`)
+# Revati Global - Admin Portal (`revati-admin`)
 
-Executive administration portal for Revati Global built with Vite, React 18, Tailwind CSS, and Lucide Icons.
+Modern, high-performance administrative single-page application for Revati Global, built with React 18, Vite, and Tailwind CSS.
 
-## Features
-- Complete content management for products, categories, blogs, services, industries, banners, and static pages.
-- Lead management for customer inquiries and newsletter subscribers.
-- Secure JWT-based authentication with session auto-expiry.
-- In-browser document and media viewer with proxy support.
-- Fully aligned with Revati Global Brand Identity System.
+## Key Features
+- **Client-Side WebP Compression:** Images are compressed and resized in the browser using HTML5 Canvas according to strict preset budgets before upload.
+- **Direct Supabase Uploads:** Media uploads directly to Supabase Storage signed URLs without routing bytes through the backend serverless function.
+- **Role-Based Navigation:** Dynamic sidebar adapting to user role (`super admin`, `admin`, `editor`, `sales`).
+- **Storage Consumption Bar:** Real-time visual monitoring of the 1 GB Supabase storage quota with amber threshold at 70%.
+- **Module Suite:**
+  - Customer Enquiries (status pipeline, notification badges, CSV lead export).
+  - Heating & HVAC Products (specifications table, capacity, power, PDF datasheets).
+  - Engineering Solutions, Applications & Reference Projects.
+  - Brochures & Technical Downloads.
+  - Users & Role Authorization (Super Admin only).
+  - Company & Brand Identity Settings.
+  - Storage Maintenance & Orphan Scanner.
 
 ## Getting Started
-
-### Prerequisites
-- Node.js (v18+)
-- npm
-
-### Installation
 ```bash
 npm install
-```
-
-### Configuration
-Copy `.env.example` to `.env` and fill in the required variables:
-```bash
-cp .env.example .env
-```
-
-#### Required Environment Variables (Names Only)
-- `VITE_API_URL` - Base URL of the Revati Backend API
-- `VITE_API_KEY` - API key for backend communications
-- `VITE_SITE_URL` - Live public website URL for preview links
-
-### Running the Application
-```bash
-# Start development server
 npm run dev
-
-# Production build
 npm run build
-
-# Preview production build locally
-npm run preview
 ```
-
